@@ -62,9 +62,17 @@ function applyEnv(config, env = process.env) {
     },
     server: {
       host: env.PUROCLAW_HOST || config.server.host,
-      port: env.PUROCLAW_PORT ? Number(env.PUROCLAW_PORT) : config.server.port
+      port: env.PUROCLAW_PORT ? parseServerPort(env.PUROCLAW_PORT) : config.server.port
     }
   });
+}
+
+function parseServerPort(value) {
+  const port = Number(value);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error(`Invalid server port: ${value}`);
+  }
+  return port;
 }
 
 async function loadConfig(cwd = process.cwd(), env = process.env) {
@@ -95,6 +103,7 @@ module.exports = {
   initConfig,
   loadConfig,
   mergeConfig,
+  parseServerPort,
   projectPath,
   readJson
 };

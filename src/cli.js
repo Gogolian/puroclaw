@@ -136,11 +136,16 @@ function readBody(request) {
 }
 
 function parseJsonBody(body) {
+  let payload;
   try {
-    return JSON.parse(body || '{}');
+    payload = JSON.parse(body || '{}');
   } catch (error) {
     throw httpError(400, 'invalid_json');
   }
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    throw httpError(400, 'invalid_json');
+  }
+  return payload;
 }
 
 function httpError(statusCode, code) {
@@ -151,7 +156,10 @@ function httpError(statusCode, code) {
 }
 
 function sendJson(response, status, payload) {
-  response.writeHead(status, { 'content-type': 'application/json' });
+  response.writeHead(status, {
+    'content-type': 'application/json; charset=utf-8',
+    'x-content-type-options': 'nosniff'
+  });
   response.end(`${JSON.stringify(payload)}\n`);
 }
 
