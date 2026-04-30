@@ -4,9 +4,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
+const { Readable } = require('node:stream');
 const test = require('node:test');
 const { callAgent } = require('../src/agent');
-const { runCli } = require('../src/cli');
+const { parseJsonBody, readBody, runCli } = require('../src/cli');
 const { parseSkillCommand } = require('../src/router');
 
 async function fixtureProject() {
@@ -79,4 +80,13 @@ test('agent explains missing provider credentials without making a request', asy
   });
 
   assert.match(output, /No provider API key found/);
+});
+
+test('request helpers reject invalid or oversized JSON bodies with status codes', async () => {
+  assert.throws(() => parseJsonBody('{'), { statusCode: 400, code: 'invalid_json' });
+
+  await assert.rejects(
+    readBody(Readable.from(['x'.repeat(1024 * 1024 + 1)])),
+    { statusCode: 413, code: 'payload_too_large' }
+  );
 });

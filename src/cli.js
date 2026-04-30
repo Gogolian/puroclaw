@@ -85,7 +85,7 @@ async function serve(cwd, options = {}) {
       }
 
       const body = await readBody(request);
-      const payload = JSON.parse(body || '{}');
+      const payload = parseJsonBody(body);
       if (!payload.message || typeof payload.message !== 'string') {
         return sendJson(response, 400, { error: 'message is required' });
       }
@@ -99,6 +99,9 @@ async function serve(cwd, options = {}) {
       });
       return sendJson(response, 200, result);
     } catch (error) {
+      if (error.statusCode) {
+        return sendJson(response, error.statusCode, { error: error.code });
+      }
       return sendJson(response, 500, { error: 'internal_error' });
     }
   });
@@ -113,16 +116,38 @@ async function serve(cwd, options = {}) {
 function readBody(request) {
   return new Promise((resolve, reject) => {
     let body = '';
+    let tooLarge = false;
     request.setEncoding('utf8');
     request.on('data', (chunk) => {
-      body += chunk;
-      if (body.length > 1024 * 1024) {
-        request.destroy(new Error('request body too large'));
+      if (tooLarge) return;
+      if (body.length + chunk.length > 1024 * 1024) {
+        tooLarge = true;
+        body = '';
+        return;
       }
+      body += chunk;
     });
-    request.on('end', () => resolve(body));
+    request.on('end', () => {
+      if (tooLarge) reject(httpError(413, 'payload_too_large'));
+      else resolve(body);
+    });
     request.on('error', reject);
   });
+}
+
+function parseJsonBody(body) {
+  try {
+    return JSON.parse(body || '{}');
+  } catch (error) {
+    throw httpError(400, 'invalid_json');
+  }
+}
+
+function httpError(statusCode, code) {
+  const error = new Error(code);
+  error.statusCode = statusCode;
+  error.code = code;
+  return error;
 }
 
 function sendJson(response, status, payload) {
@@ -137,7 +162,10 @@ function writeLine(options, line) {
 
 module.exports = {
   chat,
+  httpError,
   init,
+  parseJsonBody,
+  readBody,
   runCli,
   serve,
   skillList,
