@@ -148,8 +148,8 @@ test('unknown skill commands surface an error instead of calling the LLM', async
 });
 
 test('readBody honors the byte-size limit for multi-byte chunks', async () => {
-  // four-byte UTF-8 emoji repeated; .length (chars) is half of bytes,
-  // so the old char-based check would have under-counted size.
+  // 300k * 4-byte UTF-8 emoji = ~1.2 MiB of bytes but only 600k JS chars,
+  // so the previous char-based check would have under-counted size.
   const big = '😀'.repeat(300_000);
   await assert.rejects(
     readBody(Readable.from([big]), 1024 * 1024),

@@ -169,8 +169,8 @@ function readBody(request, limit = 1024 * 1024) {
       size += buf.length;
       if (size > limit) {
         aborted = true;
-        reject(httpError(413, 'payload_too_large'));
         request.destroy();
+        reject(httpError(413, 'payload_too_large'));
         return;
       }
       chunks.push(buf);
