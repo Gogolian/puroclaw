@@ -99,7 +99,7 @@ async function serve(cwd, options = {}) {
       });
       return sendJson(response, 200, result);
     } catch (error) {
-      return sendJson(response, 500, { error: error.message });
+      return sendJson(response, 500, { error: 'internal_error' });
     }
   });
 
