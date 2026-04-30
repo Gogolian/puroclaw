@@ -38,13 +38,21 @@ node puroclaw.js init
 node puroclaw.js chat "what should I do today?"
 node puroclaw.js serve
 node puroclaw.js skill list
+node puroclaw.js version
+node puroclaw.js help
 ```
+
+`init` writes `data/config.json` and seeds the bundled `echo` skill so you can
+try a local skill before configuring any provider.
 
 Use a local skill without configuring a provider:
 
 ```bash
 node puroclaw.js chat "/echo hello"
 ```
+
+If you invoke an unknown `/skill`, PuroClaw replies with a clear error instead
+of forwarding the message to your LLM provider.
 
 ## Configuration
 
@@ -92,6 +100,19 @@ curl -X POST http://127.0.0.1:7419/chat \
   -H 'content-type: application/json' \
   -d '{"message":"/echo hello"}'
 ```
+
+Endpoints:
+
+- `GET /health` — liveness probe, returns `{ "ok": true, "version": "..." }`.
+- `POST /chat` — JSON body `{ "message": "..." }`. Requests with the wrong
+  method get `405 Method Not Allowed`; non-JSON content types get `415`.
+- Bodies larger than 1 MiB are rejected with `413 Payload Too Large`.
+
+Set `PUROCLAW_PORT=0` to ask the OS for an ephemeral port (useful in tests).
+
+## Continuous integration
+
+Tests run on Node 18, 20 and 22 via GitHub Actions (`.github/workflows/ci.yml`).
 
 ## Project shape
 

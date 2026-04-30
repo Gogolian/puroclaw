@@ -69,7 +69,7 @@ function applyEnv(config, env = process.env) {
 
 function parseServerPort(value) {
   const port = Number(value);
-  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+  if (!Number.isInteger(port) || port < 0 || port > 65535) {
     throw new Error(`Invalid server port: ${value}`);
   }
   return port;

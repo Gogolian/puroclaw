@@ -23,6 +23,9 @@ async function routeMessage(input, context) {
     if (skillOutput !== null) {
       output = skillOutput;
       source = `skill:${command.name}`;
+    } else {
+      output = `Unknown skill "${command.name}". Run "node puroclaw.js skill list" to see available skills.`;
+      source = 'skill:unknown';
     }
   }
 

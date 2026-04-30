@@ -1,14 +1,33 @@
 {
   "name": "puroclaw",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A zero-dependency personal AI assistant runtime for plain Node.js.",
   "main": "puroclaw.js",
   "bin": {
     "puroclaw": "./puroclaw.js"
   },
   "scripts": {
+    "start": "node puroclaw.js",
     "test": "node --test"
   },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gogolian/puroclaw.git"
+  },
+  "homepage": "https://github.com/Gogolian/puroclaw#readme",
+  "bugs": {
+    "url": "https://github.com/Gogolian/puroclaw/issues"
+  },
+  "files": [
+    "puroclaw.js",
+    "src",
+    "skills",
+    "LICENSE",
+    "README.md"
+  ],
   "keywords": [
     "ai",
     "assistant",

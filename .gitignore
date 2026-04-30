@@ -1,0 +1,14 @@
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local runtime state. Track only the marker file.
+data/*
+!data/.gitkeep
+
+# Editor / OS noise
+.DS_Store
+.vscode/
+.idea/
+*.swp
