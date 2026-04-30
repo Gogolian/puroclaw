@@ -1,0 +1,20 @@
+{
+  "name": "puroclaw",
+  "version": "0.1.0",
+  "description": "A zero-dependency personal AI assistant runtime for plain Node.js.",
+  "main": "puroclaw.js",
+  "bin": {
+    "puroclaw": "./puroclaw.js"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [
+    "ai",
+    "assistant",
+    "agent",
+    "runtime",
+    "zero-dependency"
+  ],
+  "license": "MIT"
+}
