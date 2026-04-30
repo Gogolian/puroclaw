@@ -62,7 +62,7 @@ test('skill list shows local skills', async () => {
   assert.match(out.output(), /echo - Replies with the text you send it\./);
 });
 
-test('agent explains missing provider key without making a request', async () => {
+test('agent explains missing provider credentials without making a request', async () => {
   const output = await callAgent('hello', {
     config: {
       provider: {

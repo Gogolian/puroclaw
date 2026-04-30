@@ -22,7 +22,7 @@ async function callAgent(input, options) {
 
   const apiKey = provider.apiKeyEnv ? env[provider.apiKeyEnv] : undefined;
   if (!apiKey) {
-    return `No provider API key found. Set ${provider.apiKeyEnv || 'your provider key'} or run a local skill such as /echo.`;
+    return 'No provider API key found. Configure provider credentials or run a local skill such as /echo.';
   }
 
   if (provider.type === 'anthropic') {
